@@ -2,17 +2,27 @@
 library(MethComp)
 
 #import data
-df<-read.csv("cani.csv", header = TRUE, sep = ";", dec= ",", stringsAsFactors = FALSE)
-str(df)
+df<-read.csv("gatti.csv", header = TRUE, sep = ";", dec= ",", stringsAsFactors = FALSE)
+# 
+# #ignore columns
+# df<-df[,1:22]
+# 
+# head(df)
+# str(df)
+# #delete record number 99
+# df<-df[-c(393:396),]
+# 
+# df_Meth<-Meth(df, 2,1,3,7)
+# 
+# plot(df_Meth)
 
-  
-#convert data to Meth object type
+#convert data to Meth object type and save pdf with meth plot
 
 pdf()
 
-for(i in c(4:25)){
-  
-  
+for(i in c(4:22)){
+
+
 
 df_Meth<-Meth(df, 2,1,3,i)
 
