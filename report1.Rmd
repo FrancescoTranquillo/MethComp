@@ -1,0 +1,70 @@
+---
+title: "Comparing DF-50 and Procyte Idexx "
+author: "Francesco Tranquillo"
+date: "13 giugno 2018"
+output:
+  pdf_document: default
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+## Cani
+```{r cani, echo=FALSE, fig.align='center', fig.height=5, fig.width=7, message=FALSE, warning=FALSE, paged.print=TRUE}
+
+library(MethComp)
+
+df<-read.csv("cani.csv", header = TRUE, sep = ";", dec= ",", stringsAsFactors = FALSE)
+df<-df[-c(393:396),]
+
+for (i in c(4:25)) {
+df_Meth<-Meth(df, 2,1,3,i,print=FALSE)
+df_Meth$meth<-factor(df_Meth$meth, levels=c("Procyte Idexx", "DF-50"))
+df_PB<-PBreg(df_Meth)
+
+
+layout(matrix(c(1,1,2),nrow=1,ncol=3, byrow=TRUE))
+par(ps=14)
+# 
+# par(mfrow=c(2,1))
+# plot(df_Meth)
+plot(df_PB, s=1, main="Passing-Bablock Regression")
+title(main=list(colnames(df[i]), col="red"), line=3, adj=0.45)
+mycol<-rgb(193,193,193, maxColorValue = 255, alpha=255/3)
+BA.plot(df_Meth, repl.conn=FALSE, meth.names = TRUE, eqax = TRUE, pch.points = 21, bg= mycol, main="Bland-Altman plot") 
+print(df_PB)
+}
+
+```
+\newpage
+\newpage
+## Gatti
+```{r gatti, echo=FALSE, message=FALSE, warning=FALSE}
+
+library(MethComp)
+
+df<-read.csv("gatti.csv", header = TRUE, sep = ";", dec= ",", stringsAsFactors = FALSE)
+
+
+for (i in c(4:22)) {
+df_Meth<-Meth(df, 2,1,3,i,print=FALSE)
+df_Meth$meth<-factor(df_Meth$meth, levels=c("Procyte Idexx", "DF-50"))
+
+layout(matrix(c(1,1,2),nrow=1,ncol=3, byrow=TRUE))
+par(ps=14)
+# 
+# par(mfrow=c(2,1))
+# plot(df_Meth)
+plot(df_PB, s=1, main="Passing-Bablock Regression")
+title(main=list(colnames(df[i]), col="red"), line=3, adj=0.45)
+mycol<-rgb(193,193,193, maxColorValue = 255, alpha=255/3)
+BA.plot(df_Meth, repl.conn=FALSE, meth.names = TRUE, eqax = TRUE, pch.points = 21, bg= mycol, main="Bland-Altman plot") 
+print(df_PB)
+}
+
+```

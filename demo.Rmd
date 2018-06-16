@@ -1,0 +1,37 @@
+---
+title: "DF-50"
+author: "Francesco Tranquillo"
+date: "13 giugno 2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+## Identity line and Bland-Altman plot
+
+Thanks to the R Package "MethComp", it has been possible to compare every variable of interest. In the following pages are reported the plots of identity line and Bland-Altman referring to the comparison of the methods (DF-50 and Procyte Idexx)
+
+```{r pressure, echo=FALSE}
+
+library(MethComp)
+
+df<-read.csv("cani.csv", header = TRUE, sep = ";", dec= ",", stringsAsFactors = FALSE)
+df<-df[-c(393:396),]
+
+for (i in c(4:25)) {
+df_Meth<-Meth(df, 2,1,3,i)
+df_Meth$meth<-factor(df_Meth$meth, levels=c("Procyte Idexx", "DF-50"))
+
+plot(df_Meth)
+title(main=list(colnames(df[i]), col="red"), line=3, adj=0.45)
+}
+
+```
+
+
