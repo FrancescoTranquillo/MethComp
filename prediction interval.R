@@ -2,7 +2,7 @@ library(plotly)
 library(ggplot2)
 library(MethComp)
 library(reshape2)
-
+library(BivRegBLS)
 #### Data Preparation ####
 df<-read.csv("cani.csv", header = TRUE, sep = ";", dec= ",", stringsAsFactors = FALSE)
 #delete record number 99
@@ -39,24 +39,18 @@ plot(tab_norep$new_1, tab_norep$ref_1,
 
 fit.lm<- lm(tab_norep$ref_1 ~ tab_norep$ new_1)
 
+i=3
 plot(tab_norep$new_1, tab_norep$ref_1,
-     xlab= "RBC new method",
-     ylab= "RBC reference method"
+     xlab= paste0(colnames(df[i])," new method"),
+     ylab= paste0(colnames(df[i])," reference method"),
+     title(main=list(colnames(df[i]), col="red"))
 )
 
-p<-ggplot(tab_norep, aes_string(x="new", y="ref"))+
-geom_point(aes(tab_norep$new_1, tab_norep$ref_1, color="red"))+
-#Adding the regression line#
-geom_abline(slope=fit.lm$coefficients[2], intercept=fit.lm$coefficients[1])+
-#Adding the identity line
-geom_abline(slope=1, intercept=0, color="blue")
 
 
-p<-p +  geom_line(data=var_results, aes(x=var_results$new_1, y=var_results$lwr_PI)) +
- geom_line(data=var_results, aes(x=var_results$new_1, y=var_results$upr_PI))
 #confidence interval for the linear regression:
 
-ggplotly(p)
+
 CI_ex <- predict(fit.lm, interval="confidence")
 colnames(CI_ex)<- c("fit_CI", "lwr_CI", "upr_CI")
 
@@ -77,9 +71,13 @@ lines(x=var_results$new_1, y=var_results$lwr_PI)
 lines(x=var_results$new_1, y=var_results$upr_PI)
 lines(x=var_results$new_1, y=var_results$fit_PI)
 
+#area between the intervals
 
-#melt for ggplot
+varx= var(tab_norep$new_1)
+vary= var(tab_norep$ref_1)
+RCB.BLS=BLS(data=tab_norep, xcol=c("new_1"), ycol=c("ref_1"), var.y = vary ,var.x = varx, conf.level=0.95)
+XY.plot(RCB.BLS, graph.int = c("CI", "PI"),accept.int = 5)
 
-melt<-melt(var_results)
-ggplot(var_results, aes(x=melt$))+ 
-  geom_point()
+
+
+
