@@ -43,7 +43,7 @@ pdf()
 
 for(i in c(4:25)){
 
-df_Meth<-Meth(df, 2,1,3,5)
+df_Meth<-Meth(df, 2,1,3,i)
 df_Meth$meth<-factor(df_Meth$meth, levels=c("Procyte Idexx", "DF-50"))
 par(mfrow=c(1,2))
 plot(df_Meth)
